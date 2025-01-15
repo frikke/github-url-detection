@@ -3,10 +3,7 @@
 export const testableUrls = new Map<string, string[]>();
 
 export function addTests(test: string, urls: string[]): void {
-	// @ts-expect-error KISS for Vite
-	if (process.env.NODE_ENV !== 'bundling') {
-		testableUrls.set(test, urls);
-	}
+	TEST: testableUrls.set(test, urls);
 }
 
 export function getTests(detectName: string): string[] {

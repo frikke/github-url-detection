@@ -1,12 +1,15 @@
 {
 	"extends": "@sindresorhus/tsconfig",
 	"compilerOptions": {
-		"outDir": "distribution",
-		"resolveJsonModule": true
+		// TODO: Drop after https://github.com/sindresorhus/tsconfig/issues/29
+		"resolveJsonModule": true,
+		"moduleResolution": "Node",
+		"module": "Preserve"
 	},
 	"include": [
 		"index.ts",
-		"test.ts",
+		"index.test.ts",
+		"global.d.ts",
 		"collector.ts"
 	]
 }

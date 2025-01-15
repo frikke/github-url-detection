@@ -1,6 +1,6 @@
 {
 	"name": "github-url-detection",
-	"version": "7.1.2",
+	"version": "10.0.1",
 	"description": "Which GitHub page are you on? Is it an issue? Is it a list? Perfect for your WebExtension or userscript.",
 	"keywords": [
 		"github",
@@ -24,18 +24,19 @@
 		"distribution/index.d.ts"
 	],
 	"scripts": {
-		"ava": "ava --timeout 30s",
 		"build": "run-p build:*",
-		"build:vite": "vite build",
+		"build:esbuild": "esbuild index.ts --bundle --external:github-reserved-names --outdir=distribution --format=esm --drop-labels=TEST",
 		"build:typescript": "tsc --declaration --emitDeclarationOnly",
-		"demo:build": "vite build demo",
-		"demo:test": "svelte-check",
-		"demo:watch": "vite preview demo & vite build demo --watch # vite serve isn't real",
+		"build:demo": "vite build demo",
+		"fix": "xo --fix",
 		"prepack": "npm run build",
-		"test": "run-p build ava xo",
-		"watch": "run-p watch:typescript demo:watch # vite watch doesn’t generate the lib, so just use the demo",
+		"test": "run-p build test:* xo",
+		"test:unit": "vitest",
+		"test:demo": "svelte-check",
+		"watch": "run-p watch:*",
 		"watch:typescript": "tsc --watch --noEmit",
-		"watch:ava": "run-p 'ava -- --watch' 'watch:typescript -- --watch'",
+		"watch:test:unit": "npm run test:unit -- --watch",
+		"watch:demo": "vite preview demo & npm run build:demo -- --watch # vite serve isn't real",
 		"xo": "xo"
 	},
 	"xo": {
@@ -48,46 +49,31 @@
 					"*.ts"
 				],
 				"rules": {
-					"ava/assertion-arguments": "off",
-					"@typescript-eslint/dot-notation": "off",
-					"@typescript-eslint/no-non-null-assertion": "off",
-					"@typescript-eslint/no-unsafe-member-access": "off",
-					"@typescript-eslint/no-non-null-asserted-optional-chain": "off",
+					"@typescript-eslint/triple-slash-reference": "off",
 					"@typescript-eslint/naming-convention": "off",
-					"n/prefer-global/process": "off"
+					"no-unused-labels": "off",
+					"no-labels": "off"
 				}
 			}
-		],
-		"rules": {
-			"camelcase": "off"
-		}
-	},
-	"ava": {
-		"extensions": {
-			"ts": "module"
-		},
-		"nodeArguments": [
-			"--loader=@esbuild-kit/esm-loader"
 		]
 	},
+	"dependencies": {
+		"github-reserved-names": "^2.0.7"
+	},
 	"devDependencies": {
-		"@esbuild-kit/esm-loader": "^2.5.5",
-		"@sindresorhus/tsconfig": "^3.0.1",
-		"@sveltejs/vite-plugin-svelte": "^2.0.4",
-		"ava": "^5.2.0",
-		"github-reserved-names": "^2.0.4",
+		"@sindresorhus/tsconfig": "^6.0.0",
+		"@sveltejs/vite-plugin-svelte": "^3.1.1",
+		"esbuild": "^0.23.1",
 		"npm-run-all": "^4.1.5",
 		"strip-indent": "^4.0.0",
-		"svelte": "^3.58.0",
-		"svelte-check": "^3.2.0",
-		"typescript": "^5.0.4",
-		"vite": "^4.3.0-beta.4",
-		"xo": "^0.54.0"
+		"svelte": "^4.2.18",
+		"svelte-check": "^3.8.5",
+		"typescript": "^5.5.4",
+		"vite": "^5.4.2",
+		"vitest": "^2.0.5",
+		"xo": "^0.59.3"
 	},
 	"engines": {
-		"node": ">=18"
-	},
-	"overrides": {
-		"vite": "^4.3.0-beta.4"
+		"node": ">=20.10"
 	}
 }
